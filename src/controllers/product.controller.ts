@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { ProductModel } from "../models/product.model.js";
+import { createProductoSchema } from "../schemas/product.schema.js";
 
 export async function getMenu(req: Request, res: Response) {
   /*#swagger.tags = ['Products']
@@ -39,15 +40,12 @@ export async function createProduct(req: Request, res: Response) {
   /*#swagger.tags = ['Products']
   #swagger.summary = 'CREA UN NUEVO PRODUCTO' */
   try {
-    const { nombre, descripcion, precio_unitario } = req.body;
-    if (!nombre || !descripcion || !precio_unitario) {
-      res.status(400).json({ error: "faltan datos obligatorios" });
+    const result = createProductoSchema.safeParse(req.body);
+
+    if (!result.success) {
+      return res.status(400).json({ error: result.error.issues });
     }
-    const newProduct = await ProductModel.insertProduct({
-      nombre,
-      descripcion,
-      precio_unitario,
-    });
+    const newProduct = await ProductModel.insertProduct(result.data);
     res.status(201).json({ data: newProduct });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
