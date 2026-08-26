@@ -53,13 +53,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "nombre": {
+                "precio_unitario": {
                   "example": "any"
                 },
                 "descripcion": {
                   "example": "any"
                 },
-                "precio_unitario": {
+                "nombre": {
                   "example": "any"
                 }
               }
