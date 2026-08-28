@@ -27,7 +27,7 @@ export async function getProduct(req: Request, res: Response) {
     }
     const product = await ProductModel.getProductById(id);
     if (!product) {
-      res.status(400).json({ error: "producto no encotnrado" });
+      res.status(400).json({ error: "producto no encontrado" });
       return;
     }
     res.json({ data: product });

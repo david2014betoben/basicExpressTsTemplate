@@ -40,7 +40,7 @@ export const ProductModel = {
   updateProduct: async (
     id: number,
     dato: UpdateProductoInput,
-  ): Promise<Producto | null> => {
+  ): Promise<Producto | undefined> => {
     const { rows } = await pool.query(
       `UPDATE productos
             SET nombre = $1,
