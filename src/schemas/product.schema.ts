@@ -21,3 +21,4 @@ export const createProductoSchema = z.object({
     .trim()
     .min(1),
 });
+export const updateProductoSchema = createProductoSchema.partial();

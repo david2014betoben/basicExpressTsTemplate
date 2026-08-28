@@ -12,6 +12,6 @@ const router: Router = Router(); //modificado por trabajar en pnpm
 router.get("/menu", getMenu);
 router.get("/menu/:id", getProduct);
 router.post("/menu", validateProduct, createProduct);
-router.put("/menu/:id", updateProduct);
+router.put("/menu/:id", validateProduct, updateProduct);
 
 export default router;
