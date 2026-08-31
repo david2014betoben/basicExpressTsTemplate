@@ -1,13 +1,41 @@
 import type { Request, Response } from "express";
 import { ProductModel } from "../models/product.model.js";
-import { createProductoSchema } from "../schemas/product.schema.js";
+import {
+  createProductoSchema,
+  updateProductoSchema,
+} from "../schemas/product.schema.js";
+import { productService } from "../services/product.service.js";
 
 export async function getMenu(req: Request, res: Response) {
   /*#swagger.tags = ['Products']
-  #swagger.summary = 'TRAE TODO EL MENU' */
+  #swagger.summary = 'TRAE TODO EL MENU' 
+
+  #swagger.parameters['page'] = {
+  in: 'query',
+  description: 'Número de página',
+  required: false,
+  type: 'integer',
+  default: 1
+}
+
+#swagger.parameters['limit'] = {
+  in: 'query',
+  description: 'Cantidad de pedidos por página',
+  required: false,
+  type: 'integer',
+  default: 10
+}
+
+#swagger.parameters['maxPrice'] = {
+  in: 'query',
+  description: 'Filtrar pedidos con total máximo',
+  required: false,
+  type: 'number'
+}
+  */
   try {
-    const product = await ProductModel.getAllProducts();
-    res.json({ totalProductos: product.length, data: product });
+    const result = await productService.getProductFilters(req.query);
+    res.json(result);
   } catch (error) {
     console.error("error al consultar PostgreSQL: ");
     res.status(500).json({
@@ -59,13 +87,16 @@ export async function updateProduct(req: Request, res: Response) {
     const id = Number(req.params.id);
     if (isNaN(id)) {
       res.status(400).json({ error: "EL ID DEBE SER UN VALOR NUMERICO" });
+      return;
     }
-    const { nombre, descripcion, precio_unitario } = req.body;
-    const productoUpdate = await ProductModel.updateProduct(id, {
-      nombre,
-      descripcion,
-      precio_unitario,
-    });
+
+    const result = updateProductoSchema.safeParse(req.body);
+    if (!result.success) {
+      res.status(400).json({ error: result.error.issues });
+      return;
+    }
+
+    const productoUpdate = await ProductModel.updateProduct(id, result.data);
     if (!productoUpdate) {
       res.status(404).json({ error: "producto no encontrado" });
       return;

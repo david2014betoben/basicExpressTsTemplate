@@ -21,4 +21,15 @@ export const createProductoSchema = z.object({
     .trim()
     .min(1),
 });
-export const updateProductoSchema = createProductoSchema.partial();
+
+export interface productoQueryParams {
+  page?: string;
+  limit?: string;
+  maxPrice?: string;
+}
+
+export const updateProductoSchema = createProductoSchema
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "SE DEBE INGRESAR AL MENOS UN DATO PARA ACTUALIZAR",
+  });
