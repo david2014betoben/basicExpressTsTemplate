@@ -59,6 +59,7 @@ export async function updateCustomer(req: Request, res: Response) {
     const id = Number(req.params.id);
     if (isNaN(id)) {
       res.status(400).json({ error: "EL ID DEBE SER UN VALOR NUMERICO" });
+      return;
     }
     const { nombre, ap_paterno, ap_materno, email, telefono } = req.body;
     const customerUpdate = await CustomerModel.updateCustomer(id, {
